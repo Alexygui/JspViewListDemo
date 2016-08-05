@@ -57,4 +57,48 @@ public class ItemsDAO {
 			}
 		}
 	}
+	
+	/**
+	 * 根据商品编号获得商品资料
+	 */
+	public Items getItemsById(int id) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = DBHelper.getConnection();
+			String sqlString = "select id, name, city, price, number, picture from items where id = ?";
+			preparedStatement = connection.prepareStatement(sqlString);
+			preparedStatement.setInt(1, id);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				Items item = new Items();
+				item.setId(resultSet.getInt("id"));
+				item.setName(resultSet.getString("name"));
+				item.setCity(resultSet.getString("city"));
+				item.setPrice(resultSet.getInt("price"));
+				item.setNumber(resultSet.getInt("number"));
+				item.setPicture(resultSet.getString("picture"));
+				return item;
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;// 发生异常的时候仍然要有返回值
+		} finally {
+			try {
+				if (resultSet != null) {
+					resultSet.close();
+					resultSet = null;
+				}
+				if(preparedStatement != null) {
+					preparedStatement.close();
+					preparedStatement = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

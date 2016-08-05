@@ -1,6 +1,6 @@
 <%@ page language="java" import="java.util.*" contentType="text/html; charset=utf-8" %>
-<%@ page import="entity.Items"%>
-<%@ page import="dao.ItemsDAO"%>
+<%@ page import="entity.Items" %>
+<%@ page import="dao.ItemsDAO" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -52,10 +52,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <tr>
           <!-- 商品详情 -->
           <% 
-             ItemsDAO itemDao = new ItemsDAO();
-             Items item = itemDao.getItemsById(Integer.parseInt(request.getParameter("id")));
-             if(item!=null)
-             {
+             ItemsDAO anItemsDAO = new ItemsDAO();
+             int id = Integer.parseInt(request.getParameter("id"));
+             Items item = anItemsDAO.getItemsById(id);
+             if(item != null) {
           %>
           <td width="70%" valign="top">
              <table>
@@ -77,49 +77,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             }
           %>
           <% 
-              String list ="";
-              //从客户端获得Cookies集合
-              Cookie[] cookies = request.getCookies();
-              //遍历这个Cookies集合
-              if(cookies!=null&&cookies.length>0)
-              {
-	              for(Cookie c:cookies)
-	              {
-	                  if(c.getName().equals("ListViewCookie"))
-	                  {
-	                     list = c.getValue();
-	                  }
-	              }
-	          }
               
-              list+=request.getParameter("id")+",";
-              //如果浏览记录超过1000条，清零.
-              String[] arr = list.split(",");
-              if(arr!=null&&arr.length>0)
-              {
-                  if(arr.length>=1000)
-                  {
-                      list="";
-                  }
-              }
-              Cookie cookie = new Cookie("ListViewCookie",list);
-              response.addCookie(cookie);
           
           %>
           <!-- 浏览过的商品 -->
           <td width="30%" bgcolor="#EEE" align="center">
              <br>
              <b>您浏览过的商品</b><br>
-             <!-- 循环开始 -->
-             <% 
-                ArrayList<Items> itemlist = itemDao.getViewList(list);
-                if(itemlist!=null&&itemlist.size()>0 )
-                {
-                   System.out.println("itemlist.size="+itemlist.size());
-                   for(Items i:itemlist)
-                   {
+             <!-- 循环开始 --> 
+             <%-- 
+               
                          
-             %>
+             
              <div>
              <dl>
                <dt>
@@ -129,11 +98,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                <dd class="dd_city">产地:<%=i.getCity() %>&nbsp;&nbsp;价格:<%=i.getPrice() %> ￥ </dd> 
              </dl>
              </div>
-             <% 
-                   }
-                }
-             %>
-             <!-- 循环结束 -->
+            
+                
+             --%>
+           <!-- 循环结束 -->
           </td>
         </tr>
       </table>
