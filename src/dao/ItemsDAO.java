@@ -101,4 +101,44 @@ public class ItemsDAO {
 			}
 		}
 	}
+	
+	//获取最近浏览商品的前五条
+	public ArrayList<Items> getViewList(String list) {
+		System.out.println("cookieList: " + list);
+		ArrayList<Items> itemsList = new ArrayList<Items>();
+		int listCount = 5;//浏览记录里展示的商品条数
+		if(list != null && list.length() > 0) {
+			String[] cookieList = list.split(",");
+			System.out.println("cookie numbers: " + cookieList.length);
+			//如果商品记录大于listCount条
+			if(cookieList.length > listCount) {
+				for(int i = cookieList.length-1; i>= cookieList.length - listCount; i--) {
+					itemsList.add(getItemsById(Integer.parseInt(cookieList[i])));
+				}
+			} else {
+				for(int i=cookieList.length - 1; i >= 0; i--) {
+					itemsList.add(getItemsById(Integer.parseInt(cookieList[i])));
+				}
+			}
+		}
+		return itemsList;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

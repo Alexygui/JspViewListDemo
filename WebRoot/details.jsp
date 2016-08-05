@@ -77,18 +77,38 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             }
           %>
           <% 
-              
-          
+             String list= "";
+             //从客户端获得Cookies的集合，读取Cookie
+             Cookie[] cookies = request.getCookies();
+             //遍历这个Cookies集合
+             if(cookies != null && cookies.length > 0) {
+             	for(Cookie c : cookies) {
+             		if(c.getName().equals("ListViewCookie")){
+             			list = c.getValue();
+             		}
+             	}
+             } 
+          	list += request.getParameter("id") + ",";
+          	//如果浏览记录超过1000条，则清零
+          	String[] cookieNumber = list.split(",");
+          	if(cookieNumber.length > 1000){
+          		list = "";
+          	}
+          	//声明新的Cookie变量，将新的list的值保存进Cookie变量，并传回客户端保存,添加Cookie
+          	Cookie cookie = new Cookie("ListViewCookie", list);
+          	response.addCookie(cookie);
           %>
           <!-- 浏览过的商品 -->
           <td width="30%" bgcolor="#EEE" align="center">
              <br>
              <b>您浏览过的商品</b><br>
              <!-- 循环开始 --> 
-             <%-- 
-               
-                         
-             
+             <% 
+               ArrayList<Items> itemslist = anItemsDAO.getViewList(list);
+               if(itemslist != null && itemslist.size() > 0) {
+ 	              for(Items i : itemslist) {
+                          
+             %>
              <div>
              <dl>
                <dt>
@@ -98,9 +118,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                <dd class="dd_city">产地:<%=i.getCity() %>&nbsp;&nbsp;价格:<%=i.getPrice() %> ￥ </dd> 
              </dl>
              </div>
-            
-                
-             --%>
+    	        <%
+    	        			}
+                }
+             %>
            <!-- 循环结束 -->
           </td>
         </tr>
